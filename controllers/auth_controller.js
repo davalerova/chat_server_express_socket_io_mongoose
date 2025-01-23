@@ -54,4 +54,8 @@ const login = async (req, res = response) => {
     }
 };
 
-module.exports = { crearUsuario, login };
+const renewToken = async (req, res = response) => {
+    res.json({ ok: true, uid: req.decoded.uid });
+};
+
+module.exports = { crearUsuario, login, renewToken };
