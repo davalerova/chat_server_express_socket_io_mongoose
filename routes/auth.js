@@ -6,7 +6,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { crearUsuario } = require('../controllers/auth_controller');
+const { crearUsuario, login } = require('../controllers/auth_controller');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router();
@@ -20,5 +20,13 @@ router.post('/new', [
     check('password', 'La contraseña debe tener por lo menos 8 caracteres').trim().isLength({ min: 8 }),
     validarCampos
 ], crearUsuario);
+
+router.post('/', [
+    check('email', 'El email es obligatorio').trim().not().isEmpty(),
+    check('email', 'El email es inválido').trim().isEmail(),
+    check('password', 'La contraseña es obligatoria').trim().not().isEmpty(),
+    check('password', 'La contraseña debe tener por lo menos 8 caracteres').trim().isLength({ min: 8 }),
+    validarCampos
+], login);
 
 module.exports = router;
