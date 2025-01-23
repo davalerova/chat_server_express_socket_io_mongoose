@@ -7,4 +7,10 @@ const UsuarioSchema = Schema({
     online: { type: Boolean, default: false }
 });
 
+UsuarioSchema.method('toJSON', function() {
+    const { __v, _id, password, ...objeto } = this.toObject();
+    objeto.uid = _id;
+    return objeto;
+});
+
 module.exports = model('Usuario', UsuarioSchema);

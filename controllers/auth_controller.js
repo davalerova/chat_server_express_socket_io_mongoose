@@ -2,11 +2,27 @@ const { response } = require("express");
 const Usuario = require("../models/usuario_model");
 
 const crearUsuario = async (req, res = response) => {
-    
-    const usuario = Usuario(req.body);
-    await usuario.save();
 
-    res.status(200).json({ message: 'Bienvenido a nuestro chat server' });
+    const { email } = req.body;
+    
+    try {
+        if (await Usuario.findOne({ email })) {
+            return res.status(400).json({ ok: false, msg: 'El correo ya está registrado' });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: false, msg: 'Error al buscar usuario en base de datos, hable con el administrador' });
+    }
+    
+    try {
+        const usuario = Usuario(req.body);
+        await usuario.save();
+        res.status(200).json({ ok: true, usuario });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: false, msg: 'Error al guardar usuario en base de datos, hable con el administrador' });
+    }
+
 };
 
 module.exports = { crearUsuario };
