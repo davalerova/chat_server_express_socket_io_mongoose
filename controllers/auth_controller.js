@@ -55,7 +55,19 @@ const login = async (req, res = response) => {
 };
 
 const renewToken = async (req, res = response) => {
-    res.json({ ok: true, uid: req.decoded.uid });
+    const { uid } = req.decoded;
+    try {
+        const usuario = await Usuario.findById(uid);
+        if (!usuario) {
+            return res.status(400).json({ ok: false, msg: 'Usuario no encontrado' });
+        }
+        // Generar JWT
+        const token = await generarJWT(usuario.id);
+        res.status(200).json({ ok: true, usuario, token });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ ok: false, msg: 'Error al autenticar, hable con el administrador' });
+    }
 };
 
 module.exports = { crearUsuario, login, renewToken };
