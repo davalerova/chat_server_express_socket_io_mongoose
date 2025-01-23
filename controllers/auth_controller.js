@@ -1,7 +1,11 @@
 const { response } = require("express");
-const { validationResult } = require("express-validator");
+const Usuario = require("../models/usuario_model");
 
-const crearUsuario = (req, res = response) => {
+const crearUsuario = async (req, res = response) => {
+    
+    const usuario = Usuario(req.body);
+    await usuario.save();
+
     res.status(200).json({ message: 'Bienvenido a nuestro chat server' });
 };
 
