@@ -1,6 +1,6 @@
 const { io } = require('../index'); // Se importa io de index.js
 const { validarJWT } = require('../helpers/jwt');
-const { usuarioConectado, usuarioDesconectado } = require('../controllers/socket_controller');
+const { usuarioConectado, usuarioDesconectado, guardarMensaje } = require('../controllers/socket_controller');
 
 io.on('connection', async client =>  {
     console.log('Cliente conectado');
@@ -25,6 +25,7 @@ io.on('connection', async client =>  {
 
     client.on('mensaje-personal', async (payload) => {
         console.log('Mensaje personal recibido:', payload);
+        await guardarMensaje(payload);
         io.to(payload.para).emit('mensaje-personal', payload);
     });
 
