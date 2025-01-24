@@ -25,6 +25,7 @@ io.on('connection', async client =>  {
 
     client.on('mensaje-personal', async (payload) => {
         console.log('Mensaje personal recibido:', payload);
+        io.to(payload.para).emit('mensaje-personal', payload);
     });
 
   });
