@@ -14,11 +14,17 @@ io.on('connection', async client =>  {
     }
     clienteConectado = await usuarioConectado(uid);
     console.log('Cliente autenticado por websocket');
+
+    client.join(uid);
     
 
     client.on('disconnect', () => { 
         usuarioDesconectado(uid);
         console.log('Cliente desconectado');
+    });
+
+    client.on('mensaje-personal', async (payload) => {
+        console.log('Mensaje personal recibido:', payload);
     });
 
   });
