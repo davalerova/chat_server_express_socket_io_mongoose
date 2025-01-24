@@ -1,6 +1,6 @@
 const { io } = require('../index'); // Se importa io de index.js
 const { validarJWT } = require('../helpers/jwt');
-
+const { usuarioConectado, usuarioDesconectado } = require('../controllers/socket_controller');
 
 io.on('connection', async client =>  {
     console.log('Cliente conectado');
@@ -11,11 +11,13 @@ io.on('connection', async client =>  {
         console.log('No se pudo validar el JWT');
         // console.log(uid);
         return client.disconnect();
-    }else{
-        console.log('Cliente autenticado por websocket');
     }
+    clienteConectado = await usuarioConectado(uid);
+    console.log('Cliente autenticado por websocket');
+    
 
     client.on('disconnect', () => { 
+        usuarioDesconectado(uid);
         console.log('Cliente desconectado');
     });
 
